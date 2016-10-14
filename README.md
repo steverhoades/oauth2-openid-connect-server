@@ -83,3 +83,4 @@ The MIT License (MIT). Please see [License File](https://github.com/steverhoades
 - [ ] add tests
 - [ ] add example showing various flows
 - [ ] add support for OpenID Connect specific Authentication Request parameters
+- [ ] add support for OpenID Connect discovery
