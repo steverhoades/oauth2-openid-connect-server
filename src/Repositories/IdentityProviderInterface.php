@@ -1,11 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: steverhoades
- * Date: 10/12/16
- * Time: 5:19 PM
+ * @author Steve Rhoades <sedonami@gmail.com>
+ * @license http://opensource.org/licenses/MIT MIT
  */
-
 namespace OpenIDConnectServer\Repositories;
 
 use League\OAuth2\Server\Repositories\RepositoryInterface;

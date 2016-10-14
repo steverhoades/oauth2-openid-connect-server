@@ -1,13 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: steverhoades
- * Date: 10/13/16
- * Time: 12:37 PM
+ * @author Steve Rhoades <sedonami@gmail.com>
+ * @license http://opensource.org/licenses/MIT MIT
  */
-
 namespace OpenIDConnectServer;
-
 
 use OpenIDConnectServer\Entities\ClaimSetEntity;
 use OpenIDConnectServer\Entities\ClaimSetEntityInterface;
