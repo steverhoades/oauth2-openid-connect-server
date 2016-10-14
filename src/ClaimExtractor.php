@@ -120,11 +120,11 @@ class ClaimExtractor
     /**
      * For given scopes and aggregated claims get all claims that have been configured on the extractor.
      *
-     * @param $scopes
-     * @param $claims
+     * @param array $scopes
+     * @param array $claims
      * @return array
      */
-    public function extract($scopes, $claims)
+    public function extract(array $scopes, array $claims)
     {
         $claimData  = [];
         $keys       = array_keys($claims);
