@@ -11,7 +11,7 @@ The following versions of PHP are supported.
 * PHP 7.0
 
 ## Usage
-There are additional classes you will need to implement in order to send an OpenID Connect response.  
+The following classes will need to be configured and passed to the AuthorizationServer in order to provide OpenID Connect functionality.  
 
 1. IdentityRepository.  This should implement the IdentityRepositoryInterface and return the identity of the user based on the return value of $accessToken->getUserIdentifier().
 1. ClaimSet.  ClaimSet is a way to associate claims to a given scope.
