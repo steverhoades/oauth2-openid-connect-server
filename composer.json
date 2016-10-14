@@ -1,0 +1,17 @@
+{
+    "name": "steverhoades/oauth2-openid-connect-server",
+    "authors": [
+        {
+            "name": "Steve Rhoades",
+            "email": "sedonami@gmail.com"
+        }
+    ],
+    "require": {
+        "league/oauth2-server": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenIDConnectServer\\": "src/"
+        }
+    }
+}
