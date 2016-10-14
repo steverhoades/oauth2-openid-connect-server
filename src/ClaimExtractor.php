@@ -59,20 +59,10 @@ class ClaimExtractor
                 'phone_number_verified'
             ])
         );
-        $this->setClaimSets($claimSets);
-    }
 
-    /**
-     * @param ClaimSetEntityInterface[] $claimSets
-     */
-    public function setClaimSets(array $claimSets)
-    {
-        $this->claimSets = [];
         foreach ($claimSets as $claimSet) {
             $this->addClaimSet($claimSet);
         }
-
-        return $this;
     }
 
     /**
