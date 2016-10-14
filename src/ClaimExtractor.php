@@ -26,8 +26,6 @@ class ClaimExtractor
      */
     public function __construct($claimSets = [])
     {
-        $this->setClaimSets($claimSets);
-
         // Add Default OpenID Connect Claims
         // @see http://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims
         $this->addClaimSet(
@@ -65,6 +63,7 @@ class ClaimExtractor
                 'phone_number_verified'
             ])
         );
+        $this->setClaimSets($claimSets);
     }
 
     /**
