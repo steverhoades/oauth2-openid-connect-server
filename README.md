@@ -18,7 +18,7 @@ The following classes will need to be configured and passed to the Authorization
 1. ClaimExtractor. The ClaimExtractor takes an array of ClaimSets and in addition provides default claims for the OpenID Connect specified scopes of: profile, email, phone and address.
 1. IdTokenResponse. This class must be passed to the AuthorizationServer during construction and is responsible for adding the id_token to the response.
 
-### Example Usage
+### Example Configuration
 
 ```php
 // Init Repositories
