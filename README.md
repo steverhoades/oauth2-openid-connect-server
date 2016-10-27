@@ -77,10 +77,3 @@ The MIT License (MIT). Please see [License File](https://github.com/steverhoades
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
-
-## TODO
-- [ ] add support for OpenID Connect [Authentication Request Parameters](http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest)
-- [ ] add tests
-- [ ] add example showing various flows
-- [ ] add support for OpenID Connect specific Authentication Request parameters
-- [ ] add support for OpenID Connect discovery
