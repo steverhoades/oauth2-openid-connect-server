@@ -60,7 +60,7 @@ $server->enableGrantType(
 
 return $server;
 ```
-
+After the server has been configured it should be used as described in the [OAuth2 Server documentation](https://oauth2.thephpleague.com/).
 
 ## Install
 
