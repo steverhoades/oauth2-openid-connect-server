@@ -1,6 +1,6 @@
 # OAuth 2.0 OpenID Connect Server
 
-This an experimental package that attempts to provide an OpenID Connect server  using The PHP League's [OAuth2 Server](https://github.com/thephpleague/oauth2-server).
+This implements the OpenID Connect specification on top of The PHP League's [OAuth2 Server](https://github.com/thephpleague/oauth2-server).
 
 ## Requirements
 
