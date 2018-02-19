@@ -1,5 +1,7 @@
 {
     "name": "steverhoades/oauth2-openid-connect-server",
+    "description": "An OpenID Connect Server that sites on The PHP League's OAuth2 Server",
+    "license": "MIT",
     "authors": [
         {
             "name": "Steve Rhoades",
