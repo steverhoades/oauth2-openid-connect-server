@@ -133,8 +133,7 @@ class ClaimExtractor
                 continue;
             }
 
-            $data = array_filter(
-                $claims,
+            $data = array_filter($claims,
                 function($key) use ($intersected) {
                     return in_array($key, $intersected);
                 },

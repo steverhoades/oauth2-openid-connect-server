@@ -11,9 +11,19 @@
     "require": {
         "league/oauth2-server": "^5.1|^6.0|^7.0"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0",
+        "zendframework/zend-diactoros": "^1.3.2"
+    },
     "autoload": {
         "psr-4": {
             "OpenIDConnectServer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OpenIDConnectServer\\Test\\": "tests/",
+            "LeagueTests\\": "vendor/league/oauth2-server/tests/"
         }
     }
 }

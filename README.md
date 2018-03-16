@@ -11,7 +11,7 @@ The following versions of PHP are supported.
 * PHP 7.0
 
 ## Usage
-The following classes will need to be configured and passed to the AuthorizationServer in order to provide OpenID Connect functionality.  
+The following classes will need to be configured and passed to the AuthorizationServer in order to provide OpenID Connect functionality.
 
 1. IdentityRepository.  This should implement the IdentityRepositoryInterface and return the identity of the user based on the return value of $accessToken->getUserIdentifier().
 1. ClaimSet.  ClaimSet is a way to associate claims to a given scope.
@@ -70,6 +70,16 @@ Via Composer
 $ composer require steverhoades/oauth2-openid-connect-server
 ```
 
+## Testing
+To run the unit tests you will need to require league/oauth2-server from the source as this repository utilizes some of their existing test infrastructure.
+```bash
+$ composer require league/oauth2-server --prefer-source
+```
+
+Run PHPUnit from the root directory:
+```bash
+$ vendor/bin/phpunit
+```
 ## License
 
 The MIT License (MIT). Please see [License File](https://github.com/steverhoades/oauth2-openid-connect-client/blob/master/LICENSE) for more information.

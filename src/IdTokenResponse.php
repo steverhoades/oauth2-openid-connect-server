@@ -6,6 +6,8 @@
 namespace OpenIDConnectServer;
 
 use OpenIDConnectServer\Repositories\IdentityProviderInterface;
+use OpenIDConnectServer\Entities\ClaimSetInterface;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
@@ -45,6 +47,12 @@ class IdTokenResponse extends BearerTokenResponse
 
         /** @var UserEntityInterface $userEntity */
         $userEntity = $this->identityProvider->getUserEntityByIdentifier($accessToken->getUserIdentifier());
+
+        if (false === is_a($userEntity, UserEntityInterface::class)) {
+            throw new \RuntimeException('UserEntity must implement UserEntityInterface');
+        } else if (false === is_a($userEntity, ClaimSetInterface::class)) {
+            throw new \RuntimeException('UserEntity must implement ClaimSetInterface');
+        }
 
         // Add required id_token claims
         $builder = (new Builder())

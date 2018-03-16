@@ -1,0 +1,31 @@
+language: php
+
+dist: trusty
+sudo: false
+
+cache:
+  directories:
+    - vendor
+
+env:
+  - DEPENDENCIES=""
+  - DEPENDENCIES="--prefer-lowest --prefer-stable"
+
+php:
+  - 7.0
+  - 7.1
+  - 7.2
+
+install:
+  - composer update --no-interaction --prefer-source $DEPENDENCIES
+
+script:
+  - vendor/bin/phpunit --coverage-clover=coverage.clover
+
+after_script:
+    - wget https://scrutinizer-ci.com/ocular.phar
+    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+branches:
+  only:
+    - master
