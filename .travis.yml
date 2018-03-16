@@ -51,7 +51,7 @@ matrix:
       env: LEAGUE_VERSION=7.0.*
 
 before_install:
-  - composer require "league/oauth2-server:${}" --prefer-source --no-update
+  - composer require "league/oauth2-server:${LEAGUE_VERSION}" --prefer-source --no-update
 
 install:
   - composer update --perfer-source --no-interaction
