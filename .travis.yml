@@ -52,6 +52,8 @@ matrix:
 
 before_install:
   - composer require league/oauth2-server:$LEAGUE_VERSION --prefer-source --no-update
+  - chmod 600 $TRAVIS_BUILD_DIR/tests/Stubs/private.key
+  - chmod 600 $TRAVIS_BUILD_DIR/tests/Stubs/public.key
 
 install:
   - composer update --prefer-source --no-interaction
