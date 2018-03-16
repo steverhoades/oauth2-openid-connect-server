@@ -6,6 +6,10 @@
 namespace OpenIDConnectServer\Entities;
 
 
-interface ClaimSetEntityInterface extends ClaimSetInterface, ScopeInterface
+interface ClaimSetInterface
 {
+    /**
+     * @return array
+     */
+    public function getClaims();
 }
