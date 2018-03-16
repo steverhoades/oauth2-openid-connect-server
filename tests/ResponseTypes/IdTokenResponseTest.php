@@ -118,7 +118,11 @@ class IdTokenResponseTest extends TestCase
         $responseType->setPrivateKey(
             new CryptKey('file://' . __DIR__ . '/../Stubs/private.key')
         );
-        $responseType->setEncryptionKey(base64_encode(random_bytes(36)));
+
+        // league/oauth2-server 5.1.0 does not support this interface
+        if (method_exists($responseType, 'setEncryptionKey')) {
+            $responseType->setEncryptionKey(base64_encode(random_bytes(36)));
+        }
 
         $client = new ClientEntity();
         $client->setIdentifier('clientName');
