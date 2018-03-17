@@ -21,6 +21,7 @@ The following classes will need to be configured and passed to the Authorization
 1. ClaimSet.  ClaimSet is a way to associate claims to a given scope.
 1. ClaimExtractor. The ClaimExtractor takes an array of ClaimSets and in addition provides default claims for the OpenID Connect specified scopes of: profile, email, phone and address.
 1. IdTokenResponse. This class must be passed to the AuthorizationServer during construction and is responsible for adding the id_token to the response.
+1. ScopeRepository. The getScopeEntityByIdentifier($identifier) method must return a ScopeEntity for the `openid` scope in order to enable support. See examples.
 
 ### Example Configuration
 
