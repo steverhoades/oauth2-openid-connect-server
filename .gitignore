@@ -2,3 +2,4 @@
 phpunit.xml
 /build
 composer.lock
+/examples/*.key
