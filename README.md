@@ -1,6 +1,6 @@
 # OAuth 2.0 OpenID Connect Server
 
-[![Build Status](https://travis-ci.org/steverhoades/oauth2-openid-connect-server.svg?branch=master)](https://travis-ci.org/steverhoades/oauth2-openid-connect-server) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/steverhoades/oauth2-openid-connect-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/steverhoades/oauth2-openid-connect-server/?branch=master)
+[![Build Status](https://travis-ci.org/steverhoades/oauth2-openid-connect-server.svg?branch=master)](https://travis-ci.org/steverhoades/oauth2-openid-connect-server) [![Code Coverage](https://scrutinizer-ci.com/g/steverhoades/oauth2-openid-connect-server/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/steverhoades/oauth2-openid-connect-server/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/steverhoades/oauth2-openid-connect-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/steverhoades/oauth2-openid-connect-server/?branch=master)
 
 This implements the OpenID Connect specification on top of The PHP League's [OAuth2 Server](https://github.com/thephpleague/oauth2-server).
 
