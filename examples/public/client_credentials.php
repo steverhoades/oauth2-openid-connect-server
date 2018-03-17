@@ -11,13 +11,13 @@ use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use OAuth2ServerExamples\Repositories\AccessTokenRepository;
 use OAuth2ServerExamples\Repositories\ClientRepository;
-use OAuth2ServerExamples\Repositories\ScopeRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Zend\Diactoros\Stream;
 use OpenIDConnectServer\IdTokenResponse;
 use OpenIDConnectServerExamples\Repositories\IdentityRepository;
+use OpenIDConnectServerExamples\Repositories\ScopeRepository;
 use OpenIDConnectServer\ClaimExtractor;
 
 include __DIR__ . '/../vendor/autoload.php';

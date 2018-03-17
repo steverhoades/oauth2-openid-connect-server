@@ -6,13 +6,13 @@ use League\OAuth2\Server\Grant\PasswordGrant;
 use OAuth2ServerExamples\Repositories\AccessTokenRepository;
 use OAuth2ServerExamples\Repositories\ClientRepository;
 use OAuth2ServerExamples\Repositories\RefreshTokenRepository;
-use OAuth2ServerExamples\Repositories\ScopeRepository;
 use OAuth2ServerExamples\Repositories\UserRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use OpenIDConnectServer\IdTokenResponse;
 use OpenIDConnectServerExamples\Repositories\IdentityRepository;
+use OpenIDConnectServerExamples\Repositories\ScopeRepository;
 use OpenIDConnectServer\ClaimExtractor;
 
 include __DIR__ . '/../vendor/autoload.php';

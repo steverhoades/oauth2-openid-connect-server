@@ -15,13 +15,13 @@ use OAuth2ServerExamples\Repositories\AccessTokenRepository;
 use OAuth2ServerExamples\Repositories\AuthCodeRepository;
 use OAuth2ServerExamples\Repositories\ClientRepository;
 use OAuth2ServerExamples\Repositories\RefreshTokenRepository;
-use OAuth2ServerExamples\Repositories\ScopeRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Zend\Diactoros\Stream;
 use OpenIDConnectServer\IdTokenResponse;
 use OpenIDConnectServerExamples\Repositories\IdentityRepository;
+use OpenIDConnectServerExamples\Repositories\ScopeRepository;
 use OpenIDConnectServer\ClaimExtractor;
 
 include __DIR__ . '/../vendor/autoload.php';
