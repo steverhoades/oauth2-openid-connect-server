@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: steverhoades
- * Date: 3/15/18
- * Time: 5:06 PM
- */
-
 namespace OpenIDConnectServer\Test;
 
 use OpenIDConnectServer\ClaimExtractor;
