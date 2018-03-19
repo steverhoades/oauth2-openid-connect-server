@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: steverhoades
- * Date: 3/17/18
- * Time: 8:36 AM
- */
 
 namespace OpenIDConnectServerExamples\Entities;
-
 
 use OpenIDConnectServer\Entities\ClaimSetInterface;
 
