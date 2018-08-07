@@ -87,7 +87,7 @@ class ClaimExtractor
 
     /**
      * @param string $scope
-     * @return ClaimSetEntity
+     * @return ClaimSetEntity|null
      */
     public function getClaimSet($scope)
     {
