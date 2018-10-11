@@ -57,7 +57,7 @@ class IdTokenResponse extends BearerTokenResponse
         // Add required id_token claims
         $builder = (new Builder())
             ->setAudience($accessToken->getClient()->getIdentifier())
-            ->setIssuer('http://' . $_SERVER['HTTP_HOST'])
+            ->setIssuer('https://' . $_SERVER['HTTP_HOST'])
             ->setIssuedAt(time())
             ->setExpiration($accessToken->getExpiryDateTime()->getTimestamp())
             ->setSubject($userEntity->getIdentifier());
