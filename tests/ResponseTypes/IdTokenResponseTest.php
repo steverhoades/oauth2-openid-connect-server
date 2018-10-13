@@ -68,7 +68,7 @@ class IdTokenResponseTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        $_SERVER['HTTP_HOST'] = 'http://localhost';
+        $_SERVER['HTTP_HOST'] = 'https://localhost';
         $responseType = new IdTokenResponse(
             new IdentityProvider(IdentityProvider::NO_CLAIMSET),
             new ClaimExtractor()
@@ -114,7 +114,7 @@ class IdTokenResponseTest extends TestCase
 
     private function processResponseType($responseType, array $scopeNames = ['basic'])
     {
-        $_SERVER['HTTP_HOST'] = 'http://localhost';
+        $_SERVER['HTTP_HOST'] = 'https://localhost';
         $responseType->setPrivateKey(
             new CryptKey('file://' . __DIR__ . '/../Stubs/private.key')
         );
