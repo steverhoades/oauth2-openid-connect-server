@@ -35,6 +35,19 @@ class IdTokenResponse extends BearerTokenResponse
         $this->claimExtractor   = $claimExtractor;
     }
 
+    protected function getBuilder(AccessTokenEntityInterface $accessToken, UserEntityInterface $userEntity)
+    {
+        // Add required id_token claims
+        $builder = (new Builder())
+            ->setAudience($accessToken->getClient()->getIdentifier())
+            ->setIssuer('https://' . $_SERVER['HTTP_HOST'])
+            ->setIssuedAt(time())
+            ->setExpiration($accessToken->getExpiryDateTime()->getTimestamp())
+            ->setSubject($userEntity->getIdentifier());
+
+        return $builder;
+    }
+
     /**
      * @param AccessTokenEntityInterface $accessToken
      * @return array
@@ -55,12 +68,7 @@ class IdTokenResponse extends BearerTokenResponse
         }
 
         // Add required id_token claims
-        $builder = (new Builder())
-            ->setAudience($accessToken->getClient()->getIdentifier())
-            ->setIssuer('https://' . $_SERVER['HTTP_HOST'])
-            ->setIssuedAt(time())
-            ->setExpiration($accessToken->getExpiryDateTime()->getTimestamp())
-            ->setSubject($userEntity->getIdentifier());
+        $builder = $this->getBuilder($accessToken, $userEntity);
 
         // Need a claim factory here to reduce the number of claims by provided scope.
         $claims = $this->claimExtractor->extract($accessToken->getScopes(), $userEntity->getClaims());
