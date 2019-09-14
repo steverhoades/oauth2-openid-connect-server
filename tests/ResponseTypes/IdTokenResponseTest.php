@@ -115,9 +115,9 @@ class IdTokenResponseTest extends TestCase
     private function processResponseType($responseType, array $scopeNames = ['basic'])
     {
         $_SERVER['HTTP_HOST'] = 'https://localhost';
-        $responseType->setPrivateKey(
-            new CryptKey('file://' . __DIR__ . '/../Stubs/private.key')
-        );
+
+        $privateKey = new CryptKey('file://' . __DIR__ . '/../Stubs/private.key');
+        $responseType->setPrivateKey($privateKey);
 
         // league/oauth2-server 5.1.0 does not support this interface
         if (method_exists($responseType, 'setEncryptionKey')) {
@@ -136,6 +136,10 @@ class IdTokenResponseTest extends TestCase
 
         $accessToken = new AccessTokenEntity();
         $accessToken->setIdentifier('abcdef');
+
+        if (method_exists($accessToken, 'setPrivateKey')) {
+            $accessToken->setPrivateKey($privateKey);
+        }
 
         // Use DateTime for older libraries, DateTimeImmutable for new ones.
         try {
