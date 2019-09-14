@@ -142,7 +142,7 @@ class IdTokenResponseTest extends TestCase
             $accessToken->setExpiryDateTime(
                 (new \DateTime())->add(new \DateInterval('PT1H'))
             );
-        } catch(\InvalidArgumentException $e) {
+        } catch(\TypeError $e) {
             $accessToken->setExpiryDateTime(
                 (new \DateTimeImmutable())->add(new \DateInterval('PT1H'))
             );
@@ -162,7 +162,7 @@ class IdTokenResponseTest extends TestCase
             $refreshToken->setExpiryDateTime(
                 (new \DateTime())->add(new \DateInterval('PT1H'))
             );
-        } catch(\InvalidArgumentException $e) {
+        } catch(\TypeError $e) {
             $refreshToken->setExpiryDateTime(
                 (new \DateTimeImmutable())->add(new \DateInterval('PT1H'))
             );
