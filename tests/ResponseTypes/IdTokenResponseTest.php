@@ -115,9 +115,9 @@ class IdTokenResponseTest extends TestCase
     private function processResponseType($responseType, array $scopeNames = ['basic'])
     {
         $_SERVER['HTTP_HOST'] = 'https://localhost';
-        $responseType->setPrivateKey(
-            new CryptKey('file://' . __DIR__ . '/../Stubs/private.key')
-        );
+
+        $privateKey = new CryptKey('file://' . __DIR__ . '/../Stubs/private.key');
+        $responseType->setPrivateKey($privateKey);
 
         // league/oauth2-server 5.1.0 does not support this interface
         if (method_exists($responseType, 'setEncryptionKey')) {
@@ -136,9 +136,21 @@ class IdTokenResponseTest extends TestCase
 
         $accessToken = new AccessTokenEntity();
         $accessToken->setIdentifier('abcdef');
-        $accessToken->setExpiryDateTime(
-            (new \DateTime())->add(new \DateInterval('PT1H'))
-        );
+
+        if (method_exists($accessToken, 'setPrivateKey')) {
+            $accessToken->setPrivateKey($privateKey);
+        }
+
+        // Use DateTime for older libraries, DateTimeImmutable for new ones.
+        try {
+            $accessToken->setExpiryDateTime(
+                (new \DateTime())->add(new \DateInterval('PT1H'))
+            );
+        } catch(\TypeError $e) {
+            $accessToken->setExpiryDateTime(
+                (new \DateTimeImmutable())->add(new \DateInterval('PT1H'))
+            );
+        }
         $accessToken->setClient($client);
 
         foreach ($scopes as $scope) {
@@ -148,9 +160,17 @@ class IdTokenResponseTest extends TestCase
         $refreshToken = new RefreshTokenEntity();
         $refreshToken->setIdentifier('abcdef');
         $refreshToken->setAccessToken($accessToken);
-        $refreshToken->setExpiryDateTime(
-            (new \DateTime())->add(new \DateInterval('PT1H'))
-        );
+
+        // Use DateTime for older libraries, DateTimeImmutable for new ones.
+        try {
+            $refreshToken->setExpiryDateTime(
+                (new \DateTime())->add(new \DateInterval('PT1H'))
+            );
+        } catch(\TypeError $e) {
+            $refreshToken->setExpiryDateTime(
+                (new \DateTimeImmutable())->add(new \DateInterval('PT1H'))
+            );
+        }
 
         $responseType->setAccessToken($accessToken);
         $responseType->setRefreshToken($refreshToken);
