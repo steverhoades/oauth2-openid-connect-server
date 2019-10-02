@@ -1,4 +1,4 @@
-# OpenID Connect Example implementations
+# OpenID Connect Example Implementations
 The following examples piggyback off the PHP Leagues OAuth2 Server examples. Please follow the instructions below carefully.
 
 ## Installation
