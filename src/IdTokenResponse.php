@@ -39,11 +39,11 @@ class IdTokenResponse extends BearerTokenResponse
     {
         // Add required id_token claims
         $builder = (new Builder())
-            ->setAudience($accessToken->getClient()->getIdentifier())
-            ->setIssuer('https://' . $_SERVER['HTTP_HOST'])
-            ->setIssuedAt(time())
-            ->setExpiration($accessToken->getExpiryDateTime()->getTimestamp())
-            ->setSubject($userEntity->getIdentifier());
+            ->permittedFor($accessToken->getClient()->getIdentifier())
+            ->issuedBy('https://' . $_SERVER['HTTP_HOST'])
+            ->issuedAt(time())
+            ->expiresAt($accessToken->getExpiryDateTime()->getTimestamp())
+            ->relatedTo($userEntity->getIdentifier());
 
         return $builder;
     }
@@ -78,8 +78,7 @@ class IdTokenResponse extends BearerTokenResponse
         }
 
         $token = $builder
-            ->sign(new Sha256(), new Key($this->privateKey->getKeyPath(), $this->privateKey->getPassPhrase()))
-            ->getToken();
+            ->getToken(new Sha256(), new Key($this->privateKey->getKeyPath(), $this->privateKey->getPassPhrase()));
 
         return [
             'id_token' => (string) $token
