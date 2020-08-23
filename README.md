@@ -14,7 +14,7 @@ Note: league/oauth2-server version may have a higher PHP requirement.
 ## Usage
 The following classes will need to be configured and passed to the AuthorizationServer in order to provide OpenID Connect functionality.
 
-1. IdentityRepository.  This MUST implement the OpenIDConnectServer\Repositories\IdentityRepositoryInterface and return the identity of the user based on the return value of $accessToken->getUserIdentifier().
+1. IdentityRepository.  This MUST implement the OpenIDConnectServer\Repositories\IdentityProviderInterface and return the identity of the user based on the return value of $accessToken->getUserIdentifier().
    1. The IdentityRepository MUST return a UserEntity that implements the following interfaces
       1. OpenIDConnectServer\Entities\ClaimSetInterface
       1. League\OAuth2\Server\Entities\UserEntityInterface.
