@@ -74,7 +74,7 @@ class IdTokenResponse extends BearerTokenResponse
         $claims = $this->claimExtractor->extract($accessToken->getScopes(), $userEntity->getClaims());
 
         foreach ($claims as $claimName => $claimValue) {
-            $builder->set($claimName, $claimValue);
+            $builder = $builder->withClaim($claimName, $claimValue);
         }
 
         $token = $builder
