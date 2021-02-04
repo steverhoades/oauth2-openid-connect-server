@@ -3,20 +3,20 @@
  * @author Steve Rhoades <sedonami@gmail.com>
  * @license http://opensource.org/licenses/MIT MIT
  */
+
 namespace OpenIDConnectServer;
 
 use DateTimeImmutable;
-use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Token\Builder;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Key\LocalFileReference;
-use OpenIDConnectServer\Entities\ClaimSetInterface;
-use League\OAuth2\Server\Entities\UserEntityInterface;
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Token\Builder;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
+use League\OAuth2\Server\Entities\UserEntityInterface;
+use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
+use OpenIDConnectServer\Entities\ClaimSetInterface;
 use OpenIDConnectServer\Repositories\IdentityProviderInterface;
 
 class IdTokenResponse extends BearerTokenResponse
@@ -46,7 +46,7 @@ class IdTokenResponse extends BearerTokenResponse
         ClaimExtractor $claimExtractor
     ) {
         $this->identityProvider = $identityProvider;
-        $this->claimExtractor   = $claimExtractor;
+        $this->claimExtractor = $claimExtractor;
     }
 
     /**
@@ -120,7 +120,7 @@ class IdTokenResponse extends BearerTokenResponse
     private function isOpenIDRequest($scopes)
     {
         // Verify scope and make sure openid exists.
-        $valid  = false;
+        $valid = false;
 
         foreach ($scopes as $scope) {
             if ($scope->getIdentifier() === 'openid') {

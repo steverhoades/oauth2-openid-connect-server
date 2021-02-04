@@ -2,26 +2,20 @@
 
 namespace OpenIDConnectServer\Test\ResponseTypes;
 
-use Zend\Diactoros\Response;
-use Lcobucci\JWT\Token\Parser;
-use Lcobucci\JWT\Token\Builder;
-use PHPUnit\Framework\TestCase;
-use Zend\Diactoros\ServerRequest;
-use League\OAuth2\Server\CryptKey;
-use LeagueTests\Stubs\ScopeEntity;
-use LeagueTests\Stubs\ClientEntity;
 use Lcobucci\JWT\Encoding\JoseEncoder;
-use OpenIDConnectServer\ClaimExtractor;
-use Psr\Http\Message\ResponseInterface;
+use Lcobucci\JWT\Token\Builder;
+use Lcobucci\JWT\Token\Parser;
+use League\OAuth2\Server\CryptKey;
 use LeagueTests\Stubs\AccessTokenEntity;
-use OpenIDConnectServer\IdTokenResponse;
+use LeagueTests\Stubs\ClientEntity;
 use LeagueTests\Stubs\RefreshTokenEntity;
+use LeagueTests\Stubs\ScopeEntity;
+use OpenIDConnectServer\ClaimExtractor;
+use OpenIDConnectServer\IdTokenResponse;
 use OpenIDConnectServer\Test\Stubs\IdentityProvider;
-use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
-use LeagueTests\ResponseTypes\BearerTokenResponseWithParams;
-use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
-use League\OAuth2\Server\AuthorizationValidators\BearerTokenValidator;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\Response;
 
 class IdTokenResponseTest extends TestCase
 {
@@ -132,7 +126,7 @@ class IdTokenResponseTest extends TestCase
         $responseType->setIdTokenModifier(function ($token) {
             return true; // does not return instance of Builder
         });
-        
+
         $this->processResponseType($responseType, ['openid']);
     }
 
