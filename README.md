@@ -39,6 +39,13 @@ $publicKeyPath = 'file://' . __DIR__ . '/../public.key';
 // OpenID Connect Response Type
 $responseType = new IdTokenResponse(new IdentityRepository(), new ClaimExtractor());
 
+// Optionally configure the issued id token before it is signed
+$responseType->setIdTokenModifier(function(\Lcobucci\JWT\Token\Builder $token) {
+   return $token->issuedBy('Custom issuer')
+                ->withClaim('customClaim', 'Custom claim')
+                ->withHeader('kid', 'key-id');
+});
+
 // Setup the authorization server
 $server = new \League\OAuth2\Server\AuthorizationServer(
     $clientRepository,
