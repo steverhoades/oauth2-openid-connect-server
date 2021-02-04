@@ -2,24 +2,26 @@
 
 namespace OpenIDConnectServer\Test\ResponseTypes;
 
-use Lcobucci\JWT\Parser;
-use OpenIDConnectServer\ClaimExtractor;
-use OpenIDConnectServer\IdTokenResponse;
-use OpenIDConnectServer\Test\Stubs\IdentityProvider;
-use PHPUnit\Framework\TestCase;
-use League\OAuth2\Server\AuthorizationValidators\BearerTokenValidator;
-use League\OAuth2\Server\CryptKey;
-use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
-use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
-use LeagueTests\Stubs\AccessTokenEntity;
-use LeagueTests\Stubs\ClientEntity;
-use LeagueTests\Stubs\RefreshTokenEntity;
-use LeagueTests\Stubs\ScopeEntity;
-use LeagueTests\ResponseTypes\BearerTokenResponseWithParams;
-use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
+use Lcobucci\JWT\Token\Parser;
+use Lcobucci\JWT\Token\Builder;
+use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\ServerRequest;
+use League\OAuth2\Server\CryptKey;
+use LeagueTests\Stubs\ScopeEntity;
+use LeagueTests\Stubs\ClientEntity;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use OpenIDConnectServer\ClaimExtractor;
+use Psr\Http\Message\ResponseInterface;
+use LeagueTests\Stubs\AccessTokenEntity;
+use OpenIDConnectServer\IdTokenResponse;
+use LeagueTests\Stubs\RefreshTokenEntity;
+use OpenIDConnectServer\Test\Stubs\IdentityProvider;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
+use LeagueTests\ResponseTypes\BearerTokenResponseWithParams;
+use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use League\OAuth2\Server\AuthorizationValidators\BearerTokenValidator;
 
 class IdTokenResponseTest extends TestCase
 {
@@ -92,6 +94,10 @@ class IdTokenResponseTest extends TestCase
     public function testClaimsGetExtractedFromUserEntity()
     {
         $responseType = new IdTokenResponse(new IdentityProvider(), new ClaimExtractor());
+        $responseType->setIdTokenModifier(function ($token) {
+            return $token->withClaim('test', 'testValue');
+        });
+
         $response = $this->processResponseType($responseType, ['openid', 'email']);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
@@ -108,8 +114,26 @@ class IdTokenResponseTest extends TestCase
         $this->assertObjectHasAttribute('refresh_token', $json);
         $this->assertObjectHasAttribute('id_token', $json);
 
-        $token = (new Parser())->parse($json->id_token);
-        $this->assertTrue($token->hasClaim('email'));
+        $token = (new Parser(new JoseEncoder()))->parse($json->id_token);
+
+        $this->assertTrue($token->claims()->has('email'));
+        $this->assertEquals($token->claims()->get('test'), 'testValue');
+    }
+
+    public function testThrowsRuntimeExceptionWhenMissconfiguredTokenModifier()
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $responseType = new IdTokenResponse(
+            new IdentityProvider(),
+            new ClaimExtractor()
+        );
+
+        $responseType->setIdTokenModifier(function ($token) {
+            return true; // does not return instance of Builder
+        });
+        
+        $this->processResponseType($responseType, ['openid']);
     }
 
     private function processResponseType($responseType, array $scopeNames = ['basic'])
@@ -146,7 +170,7 @@ class IdTokenResponseTest extends TestCase
             $accessToken->setExpiryDateTime(
                 (new \DateTime())->add(new \DateInterval('PT1H'))
             );
-        } catch(\TypeError $e) {
+        } catch (\TypeError $e) {
             $accessToken->setExpiryDateTime(
                 (new \DateTimeImmutable())->add(new \DateInterval('PT1H'))
             );
@@ -166,7 +190,7 @@ class IdTokenResponseTest extends TestCase
             $refreshToken->setExpiryDateTime(
                 (new \DateTime())->add(new \DateInterval('PT1H'))
             );
-        } catch(\TypeError $e) {
+        } catch (\TypeError $e) {
             $refreshToken->setExpiryDateTime(
                 (new \DateTimeImmutable())->add(new \DateInterval('PT1H'))
             );
