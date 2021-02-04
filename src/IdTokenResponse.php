@@ -5,15 +5,19 @@
  */
 namespace OpenIDConnectServer;
 
-use OpenIDConnectServer\Repositories\IdentityProviderInterface;
+use DateTimeImmutable;
+use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Token\Builder;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Key\LocalFileReference;
 use OpenIDConnectServer\Entities\ClaimSetInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
-use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
-use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Builder;
+use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
+use OpenIDConnectServer\Repositories\IdentityProviderInterface;
 
 class IdTokenResponse extends BearerTokenResponse
 {
@@ -27,6 +31,16 @@ class IdTokenResponse extends BearerTokenResponse
      */
     protected $claimExtractor;
 
+    /**
+     * @var Configuration
+     */
+    private $jwtConfiguration;
+
+    /**
+     * @var callable|null
+     */
+    private $tokenModifier = null;
+
     public function __construct(
         IdentityProviderInterface $identityProvider,
         ClaimExtractor $claimExtractor
@@ -35,17 +49,32 @@ class IdTokenResponse extends BearerTokenResponse
         $this->claimExtractor   = $claimExtractor;
     }
 
-    protected function getBuilder(AccessTokenEntityInterface $accessToken, UserEntityInterface $userEntity)
+    /**
+     * Generate a JWT from the access token
+     *
+     * @return Token
+     */
+    private function getBuilder(AccessTokenEntityInterface $accessToken, UserEntityInterface $userEntity)
     {
-        // Add required id_token claims
-        $builder = (new Builder())
-            ->permittedFor($accessToken->getClient()->getIdentifier())
-            ->issuedBy('https://' . $_SERVER['HTTP_HOST'])
-            ->issuedAt(time())
-            ->expiresAt($accessToken->getExpiryDateTime()->getTimestamp())
-            ->relatedTo($userEntity->getIdentifier());
+        $this->initJwtConfiguration();
 
-        return $builder;
+        $token = $this->jwtConfiguration->builder()
+            ->permittedFor($accessToken->getClient()->getIdentifier())
+            ->canOnlyBeUsedAfter(new DateTimeImmutable())
+            ->issuedAt(new DateTimeImmutable())
+            ->expiresAt($accessToken->getExpiryDateTime())
+            ->issuedBy('https://' . $_SERVER['HTTP_HOST'])
+            ->relatedTo((string) $userEntity->getIdentifier());
+
+        if (null !== ($modifier = $this->getIdTokenModifier())) {
+            $token = call_user_func($modifier, $token);
+        }
+
+        if ($token instanceof Builder === false) {
+            throw new \RuntimeException('The id token modifier must return an instance of Lcobucci\JWT\Builder');
+        }
+
+        return $token;
     }
 
     /**
@@ -63,7 +92,7 @@ class IdTokenResponse extends BearerTokenResponse
 
         if (false === is_a($userEntity, UserEntityInterface::class)) {
             throw new \RuntimeException('UserEntity must implement UserEntityInterface');
-        } else if (false === is_a($userEntity, ClaimSetInterface::class)) {
+        } elseif (false === is_a($userEntity, ClaimSetInterface::class)) {
             throw new \RuntimeException('UserEntity must implement ClaimSetInterface');
         }
 
@@ -77,11 +106,10 @@ class IdTokenResponse extends BearerTokenResponse
             $builder = $builder->withClaim($claimName, $claimValue);
         }
 
-        $token = $builder
-            ->getToken(new Sha256(), new Key($this->privateKey->getKeyPath(), $this->privateKey->getPassPhrase()));
+        $token = $builder->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
 
         return [
-            'id_token' => (string) $token
+            'id_token' => $token->toString()
         ];
     }
 
@@ -104,4 +132,31 @@ class IdTokenResponse extends BearerTokenResponse
         return $valid;
     }
 
+    /**
+     * @see League\OAuth2\Server\Entities\Traits\AccessTokenTrait
+     */
+    private function initJwtConfiguration()
+    {
+        $this->jwtConfiguration = Configuration::forAsymmetricSigner(
+            new Sha256(),
+            LocalFileReference::file($this->privateKey->getKeyPath(), $this->privateKey->getPassPhrase() ?? ''),
+            InMemory::plainText('')
+        );
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getIdTokenModifier()
+    {
+        return $this->tokenModifier;
+    }
+
+    /**
+     * @param callable $tokenModifier
+     */
+    public function setIdTokenModifier(callable $tokenModifier)
+    {
+        $this->tokenModifier = $tokenModifier;
+    }
 }
