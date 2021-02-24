@@ -31,7 +31,7 @@ class IdTokenResponse extends BearerTokenResponse
     /**
      * @var Configuration
      */
-    private Configuration $config;
+    private $config;
 
     public function __construct(
         IdentityProviderInterface $identityProvider,
