@@ -52,7 +52,7 @@ class IdTokenResponse extends BearerTokenResponse
             ->issuedBy('https://' . $_SERVER['HTTP_HOST'])
             ->issuedAt($dateTimeImmutableObject)
             ->expiresAt($dateTimeImmutableObject->setTimestamp(
-                $accessToken->getExpiryDateTime()->getTimestamp(),
+                $accessToken->getExpiryDateTime()->getTimestamp()
             ))
             ->relatedTo($userEntity->getIdentifier());
 
