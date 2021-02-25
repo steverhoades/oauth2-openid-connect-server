@@ -37,7 +37,14 @@ $privateKeyPath = 'file://' . __DIR__ . '/../private.key';
 $publicKeyPath = 'file://' . __DIR__ . '/../public.key';
 
 // OpenID Connect Response Type
-$responseType = new IdTokenResponse(new IdentityRepository(), new ClaimExtractor());
+$responseType = new IdTokenResponse(
+    new IdentityRepository(),
+    new ClaimExtractor(),
+    \Lcobucci\JWT\Configuration::forSymmetricSigner(
+        new \Lcobucci\JWT\Signer\Hmac\Sha256(),
+        \Lcobucci\JWT\Signer\Key\InMemory::plainText('testing'),
+    ),
+);
 
 // Setup the authorization server
 $server = new \League\OAuth2\Server\AuthorizationServer(

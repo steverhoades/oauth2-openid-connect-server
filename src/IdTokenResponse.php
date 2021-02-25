@@ -5,15 +5,14 @@
  */
 namespace OpenIDConnectServer;
 
+use \DateTimeImmutable;
 use OpenIDConnectServer\Repositories\IdentityProviderInterface;
 use OpenIDConnectServer\Entities\ClaimSetInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
-use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Configuration;
 
 class IdTokenResponse extends BearerTokenResponse
 {
@@ -27,22 +26,34 @@ class IdTokenResponse extends BearerTokenResponse
      */
     protected $claimExtractor;
 
+    /**
+     * @var Configuration
+     */
+    private $config;
+
     public function __construct(
         IdentityProviderInterface $identityProvider,
-        ClaimExtractor $claimExtractor
+        ClaimExtractor $claimExtractor,
+        Configuration $config
     ) {
         $this->identityProvider = $identityProvider;
         $this->claimExtractor   = $claimExtractor;
+        $this->config           = $config;
     }
 
     protected function getBuilder(AccessTokenEntityInterface $accessToken, UserEntityInterface $userEntity)
     {
+        $dateTimeImmutableObject = new DateTimeImmutable();
+
         // Add required id_token claims
-        $builder = (new Builder())
+        $builder = $this->config
+            ->builder()
             ->permittedFor($accessToken->getClient()->getIdentifier())
             ->issuedBy('https://' . $_SERVER['HTTP_HOST'])
-            ->issuedAt(time())
-            ->expiresAt($accessToken->getExpiryDateTime()->getTimestamp())
+            ->issuedAt($dateTimeImmutableObject)
+            ->expiresAt($dateTimeImmutableObject->setTimestamp(
+                $accessToken->getExpiryDateTime()->getTimestamp(),
+            ))
             ->relatedTo($userEntity->getIdentifier());
 
         return $builder;
@@ -77,11 +88,10 @@ class IdTokenResponse extends BearerTokenResponse
             $builder = $builder->withClaim($claimName, $claimValue);
         }
 
-        $token = $builder
-            ->getToken(new Sha256(), new Key($this->privateKey->getKeyPath(), $this->privateKey->getPassPhrase()));
+        $token = $builder->getToken($this->config->signer(), $this->config->signingKey());
 
         return [
-            'id_token' => (string) $token
+            'id_token' => $token->toString()
         ];
     }
 
