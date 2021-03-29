@@ -36,8 +36,8 @@ class IdTokenResponse extends BearerTokenResponse
 
     protected function getBuilder(AccessTokenEntityInterface $accessToken, UserEntityInterface $userEntity)
     {
-        if (class_exists("Lcobucci\JWT\Token\Builder", true)) {
-            $claimsFormatter = new \Lcobucci\JWT\Encoding\ChainedFormatter(new \Lcobucci\JWT\Encoding\MicrosecondBasedDateConversion());
+        if (class_exists("Lcobucci\JWT\Token\Builder")) {
+            $claimsFormatter = \Lcobucci\JWT\Encoding\ChainedFormatter::withUnixTimestampDates();
             $builder = new \Lcobucci\JWT\Token\Builder(new \Lcobucci\JWT\Encoding\JoseEncoder(), $claimsFormatter);
         } else {
             $builder = new \Lcobucci\JWT\Builder();
