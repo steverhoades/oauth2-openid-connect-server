@@ -37,8 +37,17 @@ class IdTokenResponse extends BearerTokenResponse
 
     protected function getBuilder(AccessTokenEntityInterface $accessToken, UserEntityInterface $userEntity)
     {
+        if (class_exists("Lcobucci\JWT\Token\Builder", true)) {
+            $claimsFormatter = new \Lcobucci\JWT\Encoding\ChainedFormatter(new \Lcobucci\JWT\Encoding\MicrosecondBasedDateConversion());
+            $builder = new \Lcobucci\JWT\Token\Builder(new \Lcobucci\JWT\Encoding\JoseEncoder(), $claimsFormatter);
+        } elseif (class_exists("\Lcobucci\JWT\Builder")) {
+            $builder = new \Lcobucci\JWT\Builder();
+        } else {
+            throw new AssertionFailedError("No supported Lcobucci/JWT installed!");
+        }
+
         // Add required id_token claims
-        $builder = (new Builder())
+        $builder
             ->permittedFor($accessToken->getClient()->getIdentifier())
             ->issuedBy('https://' . $_SERVER['HTTP_HOST'])
             ->issuedAt(time())
@@ -77,11 +86,13 @@ class IdTokenResponse extends BearerTokenResponse
             $builder = $builder->withClaim($claimName, $claimValue);
         }
 
-        $token = $builder
-            ->getToken(new Sha256(), new Key($this->privateKey->getKeyPath(), $this->privateKey->getPassPhrase()));
+        $token = $builder->getToken(
+            new Sha256(),
+            Key\LocalFileReference::file($this->privateKey->getKeyPath(), (string) $this->privateKey->getPassPhrase())
+        );
 
         return [
-            'id_token' => (string) $token
+            'id_token' => $token->toString()
         ];
     }
 
