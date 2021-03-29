@@ -5,15 +5,14 @@
  */
 namespace OpenIDConnectServer;
 
+use Lcobucci\JWT\Signer\Key\LocalFileReference;
 use OpenIDConnectServer\Repositories\IdentityProviderInterface;
 use OpenIDConnectServer\Entities\ClaimSetInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
-use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Builder;
 
 class IdTokenResponse extends BearerTokenResponse
 {
@@ -40,18 +39,16 @@ class IdTokenResponse extends BearerTokenResponse
         if (class_exists("Lcobucci\JWT\Token\Builder", true)) {
             $claimsFormatter = new \Lcobucci\JWT\Encoding\ChainedFormatter(new \Lcobucci\JWT\Encoding\MicrosecondBasedDateConversion());
             $builder = new \Lcobucci\JWT\Token\Builder(new \Lcobucci\JWT\Encoding\JoseEncoder(), $claimsFormatter);
-        } elseif (class_exists("\Lcobucci\JWT\Builder")) {
-            $builder = new \Lcobucci\JWT\Builder();
         } else {
-            throw new AssertionFailedError("No supported Lcobucci/JWT installed!");
+            $builder = new \Lcobucci\JWT\Builder();
         }
 
         // Add required id_token claims
         $builder
             ->permittedFor($accessToken->getClient()->getIdentifier())
             ->issuedBy('https://' . $_SERVER['HTTP_HOST'])
-            ->issuedAt(time())
-            ->expiresAt($accessToken->getExpiryDateTime()->getTimestamp())
+            ->issuedAt(new \DateTimeImmutable())
+            ->expiresAt($accessToken->getExpiryDateTime())
             ->relatedTo($userEntity->getIdentifier());
 
         return $builder;
@@ -88,7 +85,7 @@ class IdTokenResponse extends BearerTokenResponse
 
         $token = $builder->getToken(
             new Sha256(),
-            Key\LocalFileReference::file($this->privateKey->getKeyPath(), (string) $this->privateKey->getPassPhrase())
+            LocalFileReference::file($this->privateKey->getKeyPath(), (string) $this->privateKey->getPassPhrase())
         );
 
         return [
