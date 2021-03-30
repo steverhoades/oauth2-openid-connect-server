@@ -103,12 +103,11 @@ class IdTokenResponseTest extends TestCase
         self::assertObjectHasAttribute('id_token', $json);
 
         if (class_exists("\Lcobucci\JWT\Token\Parser")) {
-            $parser = new \Lcobucci\JWT\Token\Parser(new \Lcobucci\JWT\Encoding\JoseEncoder);
+            $parser = new \Lcobucci\JWT\Token\Parser(new \Lcobucci\JWT\Encoding\JoseEncoder, ChainedFormatter::withUnixTimestampDates());
         } else {
             $parser = new \Lcobucci\JWT\Parser();
         }
 
-        var_dump($json->id_token);
         $token = $parser->parse($json->id_token);
         self::assertTrue($token->claims()->has("email"));
     }
