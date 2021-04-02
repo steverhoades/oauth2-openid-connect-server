@@ -7,17 +7,6 @@ cache:
   directories:
     - vendor
 
-env:
-  - LEAGUE_VERSION=5.1.*
-  - JWT_VERSION=3.4.*
-php:
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-  - 7.4
-  - 8.0
-
 matrix:
   include:
     - php: 5.6
