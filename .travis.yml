@@ -68,7 +68,7 @@ install:
   - composer update --prefer-source --no-interaction
 
 script:
-  - vendor/bin/phpunit --coverage-clover=coverage.clover
+  - php -d error_reporting="E_ALL & ~E_USER_DEPRECATED" vendor/bin/phpunit --coverage-clover=coverage.clover
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar
