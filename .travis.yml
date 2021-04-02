@@ -1,6 +1,6 @@
 language: php
 
-dist: trusty
+dist: bionic
 sudo: false
 
 cache:
