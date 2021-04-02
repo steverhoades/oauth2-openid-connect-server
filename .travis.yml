@@ -55,12 +55,12 @@ matrix:
       env: LEAGUE_VERSION=8.0.*  JWT_VERSION=3.4.*
 
     - php: 7.4
-      env: LEAGUE_VERSION=8.0.*  JWT_VERSION=3.4.*
+      env: LEAGUE_VERSION=^8.0  JWT_VERSION=^3.4
     - php: 7.4
-      env: LEAGUE_VERSION=8.0.*  JWT_VERSION=^4
+      env: LEAGUE_VERSION=^8.0  JWT_VERSION=^4.0
 
     - php: 8.0
-      env: LEAGUE_VERSION=8.0.*  JWT_VERSION=4.1.*
+      env: LEAGUE_VERSION=^8.0  JWT_VERSION=^4.0
 
 before_install:
   - composer require league/oauth2-server:$LEAGUE_VERSION --prefer-source --no-update
