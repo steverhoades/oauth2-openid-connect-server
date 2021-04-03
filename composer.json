@@ -13,7 +13,7 @@
         "lcobucci/jwt": "^3.4.3|^4.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.0",
+        "phpunit/phpunit": "^5.0|^9.5",
         "zendframework/zend-diactoros": "^1.3.2"
     },
     "autoload": {

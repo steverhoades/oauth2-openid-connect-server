@@ -29,7 +29,7 @@ class IdTokenResponseTest extends TestCase
 
         $response->getBody()->rewind();
         $json = json_decode($response->getBody()->getContents());
-        self::assertAttributeEquals('Bearer', 'token_type', $json);
+        self::assertEquals('Bearer', $json->token_type);
         self::assertObjectHasAttribute('expires_in', $json);
         self::assertObjectHasAttribute('access_token', $json);
         self::assertObjectHasAttribute('refresh_token', $json);
@@ -48,7 +48,7 @@ class IdTokenResponseTest extends TestCase
 
         $response->getBody()->rewind();
         $json = json_decode($response->getBody()->getContents());
-        self::assertAttributeEquals('Bearer', 'token_type', $json);
+        self::assertEquals('Bearer', $json->token_type);
         self::assertObjectHasAttribute('expires_in', $json);
         self::assertObjectHasAttribute('access_token', $json);
         self::assertObjectHasAttribute('refresh_token', $json);
@@ -96,7 +96,7 @@ class IdTokenResponseTest extends TestCase
         $response->getBody()->rewind();
         $json = json_decode($response->getBody()->getContents(),false);
 
-        self::assertAttributeEquals('Bearer', 'token_type', $json);
+        self::assertEquals('Bearer', $json->token_type);
         self::assertObjectHasAttribute('expires_in', $json);
         self::assertObjectHasAttribute('access_token', $json);
         self::assertObjectHasAttribute('refresh_token', $json);

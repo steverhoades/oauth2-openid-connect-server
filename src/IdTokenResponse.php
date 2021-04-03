@@ -43,12 +43,18 @@ class IdTokenResponse extends BearerTokenResponse
             $builder = new \Lcobucci\JWT\Builder();
         }
 
+        // Since version 8.0 league/oauth2-server returns \DateTimeImmutable
+        $expiresAt = $accessToken->getExpiryDateTime();
+        if ($expiresAt instanceof \DateTime) {
+            $expiresAt = \DateTimeImmutable::createFromMutable($expiresAt);
+        }
+
         // Add required id_token claims
         $builder
             ->permittedFor($accessToken->getClient()->getIdentifier())
             ->issuedBy('https://' . $_SERVER['HTTP_HOST'])
             ->issuedAt(new \DateTimeImmutable())
-            ->expiresAt($accessToken->getExpiryDateTime())
+            ->expiresAt($expiresAt)
             ->relatedTo($userEntity->getIdentifier());
 
         return $builder;
