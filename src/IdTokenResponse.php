@@ -5,6 +5,7 @@
  */
 namespace OpenIDConnectServer;
 
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Key\LocalFileReference;
 use OpenIDConnectServer\Repositories\IdentityProviderInterface;
 use OpenIDConnectServer\Entities\ClaimSetInterface;
@@ -89,10 +90,16 @@ class IdTokenResponse extends BearerTokenResponse
             $builder = $builder->withClaim($claimName, $claimValue);
         }
 
-        $token = $builder->getToken(
-            new Sha256(),
-            LocalFileReference::file($this->privateKey->getKeyPath(), (string) $this->privateKey->getPassPhrase())
-        );
+        if (
+            method_exists($this->privateKey, 'getKeyContents')
+            && !empty($this->privateKey->getKeyContents())
+        ) {
+            $key = InMemory::plainText($this->privateKey->getKeyContents());
+        } else {
+            $key = LocalFileReference::file($this->privateKey->getKeyPath(), (string)$this->privateKey->getPassPhrase());
+        }
+
+        $token = $builder->getToken(new Sha256(), $key);
 
         return [
             'id_token' => $token->toString()

@@ -16,10 +16,13 @@ use Zend\Diactoros\Response;
 
 class IdTokenResponseTest extends TestCase
 {
-    public function testGeneratesDefaultHttpResponse()
+    /**
+     * @dataProvider provideCryptKeys
+     */
+    public function testGeneratesDefaultHttpResponse($privateKey)
     {
         $responseType = new IdTokenResponse(new IdentityProvider(), new ClaimExtractor());
-        $response = $this->processResponseType($responseType);
+        $response = $this->processResponseType($responseType, $privateKey);
 
         self::assertInstanceOf(ResponseInterface::class, $response);
         self::assertEquals(200, $response->getStatusCode());
@@ -35,10 +38,13 @@ class IdTokenResponseTest extends TestCase
         self::assertObjectHasAttribute('refresh_token', $json);
     }
 
-    public function testOpenIDConnectHttpResponse()
+    /**
+     * @dataProvider provideCryptKeys
+     */
+    public function testOpenIDConnectHttpResponse($privateKey)
     {
         $responseType = new IdTokenResponse(new IdentityProvider(), new ClaimExtractor());
-        $response = $this->processResponseType($responseType, ['openid']);
+        $response = $this->processResponseType($responseType, $privateKey, ['openid']);
 
         self::assertInstanceOf(ResponseInterface::class, $response);
         self::assertEquals(200, $response->getStatusCode());
@@ -57,7 +63,10 @@ class IdTokenResponseTest extends TestCase
 
     // test additional claims
     // test fails without claimsetinterface
-    public function testThrowsRuntimeExceptionWhenMissingClaimSetInterface()
+    /**
+     * @dataProvider provideCryptKeys
+     */
+    public function testThrowsRuntimeExceptionWhenMissingClaimSetInterface($privateKey)
     {
         $this->expectException(\RuntimeException::class);
 
@@ -66,26 +75,32 @@ class IdTokenResponseTest extends TestCase
             new IdentityProvider(IdentityProvider::NO_CLAIMSET),
             new ClaimExtractor()
         );
-        $this->processResponseType($responseType, ['openid']);
+        $this->processResponseType($responseType, $privateKey, ['openid']);
         self::fail('Exception should have been thrown');
     }
 
     // test fails without identityinterface
-    public function testThrowsRuntimeExceptionWhenMissingIdentifierSetInterface()
+    /**
+     * @dataProvider provideCryptKeys
+     */
+    public function testThrowsRuntimeExceptionWhenMissingIdentifierSetInterface($privateKey)
     {
         $this->expectException(\RuntimeException::class);
         $responseType = new IdTokenResponse(
             new IdentityProvider(IdentityProvider::NO_IDENTIFIER),
             new ClaimExtractor()
         );
-        $this->processResponseType($responseType, ['openid']);
+        $this->processResponseType($responseType, $privateKey, ['openid']);
         self::fail('Exception should have been thrown');
     }
 
-    public function testClaimsGetExtractedFromUserEntity()
+    /**
+     * @dataProvider provideCryptKeys
+     */
+    public function testClaimsGetExtractedFromUserEntity($privateKey)
     {
         $responseType = new IdTokenResponse(new IdentityProvider(), new ClaimExtractor());
-        $response = $this->processResponseType($responseType, ['openid', 'email']);
+        $response = $this->processResponseType($responseType, $privateKey, ['openid', 'email']);
 
         self::assertInstanceOf(ResponseInterface::class, $response);
         self::assertEquals(200, $response->getStatusCode());
@@ -112,11 +127,36 @@ class IdTokenResponseTest extends TestCase
         self::assertTrue($token->claims()->has("email"));
     }
 
-    private function processResponseType($responseType, array $scopeNames = ['basic'])
+    public static function provideCryptKeys()
+    {
+        return array(
+            array(new CryptKey('file://'.__DIR__.'/../Stubs/private.key')),
+            array(new CryptKey(
+                <<<KEY
+-----BEGIN RSA PRIVATE KEY-----
+MIICXgIBAAKBgQDOBcFjGUlo3BJ9zjwQLgAHn6Oy5Si0uB7MublTiPob8rWTiCE4
+weAFqzPoAB07vB0t0f8c1R8rmwHMD5ljWPBgJ8FewtwAUzprOBcau6DWukd/TKxX
+WeVLAl/NZxijI+jR5QDBYLNBtj1G4LBVHMmINd3ryCycbf9ac3rcC8zhrQIDAQAB
+AoGADfOJ0wIlXHp6rhZHLvlOezWuSjEGfqZxP3/cMvH1rerTrPfs+AD5AKlFTJKl
+aCQm/bFYy0ULZVKL3pu30Wh2bo1nh/wLuLSI9Nz3O8jqAP3z0i07SoRoQmb8fRnn
+dwoDFqnk3uGqcOenheSqheIgl9vdW/3avhD6nkMKZGxPYwECQQDoSj/xHogEzMqB
+1Z2E5H/exeE9GQ7+dGITRR2MSgo9WvcKdRhGaQ44dsnTmqiZWAfqAPJjTQIIA/Cn
+YRRTeBbNAkEA4w0iEvCIygGQOAnWuvVzlh+pxIB+BTeGkbiBG7nkYYc9b6B/Tw1B
+GWGRddBr/FIfPvy1X2ip/TBpH+9bHnE2YQJBAIbZw/EYhmIy+UUSW9WwSUNsoOu1
+Rm0V53HEZ/jvaq5fxpa9j5AgoO7KlzROzp3m6wE/93cKV6mLkAO7ae9jAekCQQCf
+B6DZIS6+RrAMACAt3SOzf8P6BYG/B7Ayusd7cw2ang4S9JiW9xKkw2kN2wj3t1F5
+XalwBTAjTdgj7ROmU+ehAkEAkOyXKONGBoVfaixRHgBP6jIBSSPbB2Aosi0QAURX
+6GOY7wOS1pCSntTOBQxV7wVjqFwYAR10MSxFSNfpJ7RkzA==
+-----END RSA PRIVATE KEY-----
+KEY
+            ),
+        ));
+    }
+
+    private function processResponseType($responseType, $privateKey,  array $scopeNames = ['basic'])
     {
         $_SERVER['HTTP_HOST'] = 'https://localhost';
 
-        $privateKey = new CryptKey('file://' . __DIR__ . '/../Stubs/private.key');
         $responseType->setPrivateKey($privateKey);
 
         // league/oauth2-server 5.1.0 does not support this interface
