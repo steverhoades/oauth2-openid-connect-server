@@ -94,7 +94,7 @@ class IdTokenResponse extends BearerTokenResponse
             method_exists($this->privateKey, 'getKeyContents')
             && !empty($this->privateKey->getKeyContents())
         ) {
-            $key = InMemory::plainText($this->privateKey->getKeyContents());
+            $key = InMemory::plainText($this->privateKey->getKeyContents(), (string)$this->privateKey->getPassPhrase());
         } else {
             $key = LocalFileReference::file($this->privateKey->getKeyPath(), (string)$this->privateKey->getPassPhrase());
         }
