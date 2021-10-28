@@ -12,7 +12,7 @@ use LeagueTests\Stubs\ClientEntity;
 use LeagueTests\Stubs\RefreshTokenEntity;
 use LeagueTests\Stubs\ScopeEntity;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response;
+use Laminas\Diactoros\Response;
 
 class IdTokenResponseTest extends TestCase
 {
