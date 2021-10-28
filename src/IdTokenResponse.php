@@ -14,6 +14,9 @@ use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Token\Builder;
+use Lcobucci\JWT\Encoding\JoseEncoder;
 
 class IdTokenResponse extends BearerTokenResponse
 {
@@ -37,12 +40,8 @@ class IdTokenResponse extends BearerTokenResponse
 
     protected function getBuilder(AccessTokenEntityInterface $accessToken, UserEntityInterface $userEntity)
     {
-        if (class_exists("Lcobucci\JWT\Token\Builder")) {
-            $claimsFormatter = \Lcobucci\JWT\Encoding\ChainedFormatter::withUnixTimestampDates();
-            $builder = new \Lcobucci\JWT\Token\Builder(new \Lcobucci\JWT\Encoding\JoseEncoder(), $claimsFormatter);
-        } else {
-            $builder = new \Lcobucci\JWT\Builder();
-        }
+        $claimsFormatter = ChainedFormatter::withUnixTimestampDates();
+        $builder = new Builder(new JoseEncoder(), $claimsFormatter);
 
         // Since version 8.0 league/oauth2-server returns \DateTimeImmutable
         $expiresAt = $accessToken->getExpiryDateTime();
