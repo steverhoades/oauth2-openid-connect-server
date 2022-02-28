@@ -69,7 +69,7 @@ After the server has been configured it should be used as described in the [OAut
 
 ## UserEntity
 In order for this library to work properly you will need to add your IdentityProvider to the IdTokenResponse object.  This will be used internally to lookup a UserEntity by it's identifier.  Additionally your UserEntity must implement the ClaimSetInterface which includes a single method getClaims().  The getClaims() method should return a list of attributes as key/value pairs that can be returned if the proper scope has been defined.
-```
+```php
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use OpenIDConnectServer\Entities\ClaimSetInterface;
@@ -90,7 +90,7 @@ class UserEntity implements UserEntityInterface, ClaimSetInterface
 
 ## ClaimSets
 A ClaimSet is a scope that defines a list of claims.
-```
+```php
 // Example of the profile ClaimSet
 $claimSet = new ClaimSetEntity('profile', [
         'name',
@@ -114,7 +114,7 @@ As you can see from the above, profile lists a set of claims that can be extract
 
 ### Adding Custom ClaimSets
 At some point you will likely want to include your own group of custom claims. To do this you will need to create a ClaimSetEntity, give it a scope (the value you will include in the scope parameter of your OAuth2 request) and the list of claims it supports.
-```
+```php
 $extractor = new ClaimExtractor();
 // Create your custom scope
 $claimSet = new ClaimSetEntity('company', [
