@@ -52,6 +52,8 @@ class IdTokenResponse extends BearerTokenResponse
         // Add required id_token claims
         $builder
             ->permittedFor($accessToken->getClient()->getIdentifier())
+            ->identifiedBy($accessToken->getIdentifier())
+            ->withClaim('scopes', array_map(fn (ScopeEntityInterface $scope): string => $scope->getIdentifier(), $accessToken->getScopes()))
             ->issuedBy('https://' . $_SERVER['HTTP_HOST'])
             ->issuedAt(new \DateTimeImmutable())
             ->expiresAt($expiresAt)
