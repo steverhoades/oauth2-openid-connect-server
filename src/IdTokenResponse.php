@@ -50,14 +50,12 @@ class IdTokenResponse extends BearerTokenResponse
         }
 
         // Add required id_token claims
-        $builder
+        return $builder
             ->permittedFor($accessToken->getClient()->getIdentifier())
             ->issuedBy('https://' . $_SERVER['HTTP_HOST'])
             ->issuedAt(new \DateTimeImmutable())
             ->expiresAt($expiresAt)
             ->relatedTo($userEntity->getIdentifier());
-
-        return $builder;
     }
 
     /**
