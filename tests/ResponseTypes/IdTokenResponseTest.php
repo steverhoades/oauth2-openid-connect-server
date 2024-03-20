@@ -70,10 +70,10 @@ class IdTokenResponseTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        $_SERVER['HTTP_HOST'] = 'https://localhost';
         $responseType = new IdTokenResponse(
             new IdentityProvider(IdentityProvider::NO_CLAIMSET),
-            new ClaimExtractor()
+            new ClaimExtractor(),
+            'https://localhost'
         );
         $this->processResponseType($responseType, $privateKey, ['openid']);
         self::fail('Exception should have been thrown');
