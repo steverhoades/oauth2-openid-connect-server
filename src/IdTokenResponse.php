@@ -30,12 +30,19 @@ class IdTokenResponse extends BearerTokenResponse
      */
     protected $claimExtractor;
 
+    /**
+     * @var string|null
+     */
+    protected $keyIdentifier;
+    
     public function __construct(
         IdentityProviderInterface $identityProvider,
-        ClaimExtractor $claimExtractor
+        ClaimExtractor $claimExtractor,
+        ?string $keyIdentifier = null
     ) {
         $this->identityProvider = $identityProvider;
         $this->claimExtractor   = $claimExtractor;
+        $this->keyIdentifier   = $keyIdentifier;
     }
 
     protected function getBuilder(AccessTokenEntityInterface $accessToken, UserEntityInterface $userEntity)
@@ -85,6 +92,10 @@ class IdTokenResponse extends BearerTokenResponse
 
         foreach ($claims as $claimName => $claimValue) {
             $builder = $builder->withClaim($claimName, $claimValue);
+        }
+
+        if ($this->keyIdentifier !== null) {
+            $builder = $builder->withHeader('kid', $keyIdentifier);
         }
 
         if (
