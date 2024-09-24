@@ -62,7 +62,7 @@ class IdTokenResponse extends BearerTokenResponse
      * @param AccessTokenEntityInterface $accessToken
      * @return array
      */
-    protected function getExtraParams(AccessTokenEntityInterface $accessToken)
+    protected function getExtraParams(AccessTokenEntityInterface $accessToken): array
     {
         if (false === $this->isOpenIDRequest($accessToken->getScopes())) {
             return [];
