@@ -6,8 +6,8 @@ This implements the OpenID Connect specification on top of The PHP League's [OAu
 
 ## Requirements
 
-* Requires PHP version 7.2 or greater.
-* [league/oauth2-server](https://github.com/thephpleague/oauth2-server) 5.1 or greater.
+* Requires PHP version 7.4 or greater.
+* [league/oauth2-server](https://github.com/thephpleague/oauth2-server) 8.4.2 or greater.
 
 Note: league/oauth2-server version may have a higher PHP requirement.
 
