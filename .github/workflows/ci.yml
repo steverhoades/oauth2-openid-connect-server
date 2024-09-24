@@ -21,22 +21,13 @@ jobs:
             - run: composer validate --strict --no-check-lock
 
     tests:
-        name: "Tests on PHP ${{ matrix.php }}${{ matrix.name_suffix }}"
+        name: "Tests on PHP ${{ matrix.php }}"
         runs-on: ubuntu-latest
 
         strategy:
             fail-fast: false
             matrix:
                 php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
-                league_version: [ '' ] # Run jobs without changing the requirement from composer.json
-                name_suffix: [ '' ]
-                include:
-                    - php: '7.4'
-                      league_version: '5.1.*'
-                      name_suffix: ' with League 5.1'
-                    - php: '7.4'
-                      league_version: '>=8.0.0 <=8.3.1'
-                      name_suffix: ' with League 8.3.1'
 
         steps:
             -   uses: actions/checkout@v4
@@ -45,10 +36,6 @@ jobs:
                     coverage: "none"
                     php-version: "${{ matrix.php }}"
                     ini-file: development
-
-            -   name: Update league requirement
-                if: matrix.league_version != ''
-                run: composer require league/oauth2-server:"${{ matrix.league_version }}" --no-update
 
             -   name: Update permissions
                 run: |
