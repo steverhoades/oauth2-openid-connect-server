@@ -27,11 +27,11 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3' ]
+                php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
                 league_version: [ '' ] # Run jobs without changing the requirement from composer.json
                 name_suffix: [ '' ]
                 include:
-                    - php: '5.6'
+                    - php: '7.4'
                       league_version: '5.1.*'
                       name_suffix: ' with League 5.1'
                     - php: '7.4'
