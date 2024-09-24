@@ -48,7 +48,7 @@ jobs:
 
             -   name: Update league requirement
                 if: matrix.league_version != ''
-                run: composer require league/oauth2-server:"$LEAGUE_VERSION" --no-update
+                run: composer require league/oauth2-server:"${{ matrix.league_version }}" --no-update
 
             -   name: Update permissions
                 run: |
