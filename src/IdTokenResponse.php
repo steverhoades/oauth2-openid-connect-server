@@ -95,7 +95,7 @@ class IdTokenResponse extends BearerTokenResponse
         }
 
         if ($this->keyIdentifier !== null) {
-            $builder = $builder->withHeader('kid', $keyIdentifier);
+            $builder = $builder->withHeader('kid', $this->keyIdentifier);
         }
 
         if (
