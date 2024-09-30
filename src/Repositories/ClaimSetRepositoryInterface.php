@@ -8,5 +8,5 @@ namespace OpenIDConnectServer\Repositories;
 
 interface ClaimSetRepositoryInterface
 {
-    public function getClaimSetByScopeIdentifier($scopeIdentifier);
+    public function getClaimSetByScopeIdentifier(string $scopeIdentifier);
 }

@@ -14,5 +14,5 @@ interface IdentityProviderInterface extends RepositoryInterface
     /**
      * @return UserEntityInterface&ClaimSetInterface
      */
-    public function getUserEntityByIdentifier($identifier);
+    public function getUserEntityByIdentifier(string $identifier);
 }
